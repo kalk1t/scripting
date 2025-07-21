@@ -1,5 +1,6 @@
 #define generate 1
 #define clear 2
+#define copy 3
 
 
 #define plain_text 11
@@ -10,7 +11,7 @@
 int x, y, w, h;
 
 
-HWND hText,hEncryptedText,hDecryptedText,hGenerate,hClear;
+HWND hText,hEncryptedText,hDecryptedText,hGenerate,hClear,hCopy;
 
 
 HBITMAP background_bm;

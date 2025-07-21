@@ -31,6 +31,13 @@ void encrypted_text_window(HWND hwnd) {
 	hEncryptedText = CreateWindowA("edit", "", WS_VISIBLE | WS_CHILD | ES_MULTILINE | ES_READONLY | WS_VSCROLL | WS_HSCROLL | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
 		x, y, w, h, hwnd, (HMENU)encrypted_text, 0, 0);
 
+	x = 250;
+	y = 425;
+	w = 50;
+	h = 30;
+	hCopy = CreateWindowA("button", "copy", WS_VISIBLE | WS_CHILD,
+		x, y, w, h, hwnd, (HMENU)copy, 0, 0);
+
 }
 
 void decrypted_text_window(HWND hwnd) {

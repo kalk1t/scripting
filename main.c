@@ -41,6 +41,27 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, 0);
             }
             break;
+            case copy:
+            {
+				int length = GetWindowTextLength(hEncryptedText);
+                if (length > 0) {
+                    char* buffer = (char*)GlobalAlloc(GMEM_MOVEABLE, length + 1);
+                    if (buffer) {
+						char* text = (char*)GlobalLock(buffer);
+						SendDlgItemMessageA(hwnd, encrypted_text, WM_GETTEXT, length + 1, (LPARAM)text);
+						text[length] = '\0'; // Null-terminate the string
+                        GlobalUnlock(buffer);
+						// Open clipboard and copy text
+						if (OpenClipboard(hwnd)) {
+							EmptyClipboard();
+							SetClipboardData(CF_TEXT, buffer);
+                            CloseClipboard();
+						}
+						
+                    }
+                }
+            }
+            break;
         }
 		return 0;
     }
