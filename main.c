@@ -5,15 +5,45 @@
 #include "include/functions.h"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
     switch (uMsg) {
 
     case WM_CREATE:
     {
         loadBitmaps();
-        //text_window(hwnd);
+        text_window(hwnd);
+		encrypted_text_window(hwnd);
+		decrypted_text_window(hwnd);
+
+
+
         return 0;
     }
 
+    case WM_COMMAND:
+    {
+        switch ((short)(wParam)) {
+            case generate:
+            {
+                int length = GetWindowTextLength(hText);
+                char* buffer = (char*)malloc(length + 1);
+                SendDlgItemMessageA(hwnd, plain_text, WM_GETTEXT, length, (LPARAM)buffer);
+                SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, (LPARAM)buffer);
+                SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, (LPARAM)buffer);
+
+                free(buffer);
+            }
+            break;
+            case clear:
+            {
+                SendDlgItemMessageA(hwnd, plain_text, WM_SETTEXT, 0, 0);
+                SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, 0);
+                SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, 0);
+            }
+            break;
+        }
+		return 0;
+    }
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
@@ -23,13 +53,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         SelectObject(hMemDC, background_bm);
 		BitBlt(hdc, 0, 0, 900, 900, hMemDC, 0, 0, SRCCOPY);
 
-
         DeleteDC(hMemDC); // Clean up the memory device context
         EndPaint(hwnd, &ps);
         return 0;
     }
 
 	case WM_DESTROY:
+		// Clean up resources before exiting
+
+
 		DeleteDC(GetDC(hwnd)); // Clean up the device context
 		DeleteObject(background_bm); // Clean up the bitmap
         PostQuitMessage(0);
