@@ -39,6 +39,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 SendDlgItemMessageA(hwnd, plain_text, WM_SETTEXT, 0, 0);
                 SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, 0);
                 SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, 0);
+                SendDlgItemMessageA(hwnd, key, WM_SETTEXT, 0, 0);
             }
             break;
             case copy:
@@ -61,6 +62,23 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 }
             }
             break;
+            case key:
+            {
+                if (HIWORD(wParam) == EN_SETFOCUS) {
+                    if (!keyCleared) {
+                        SendDlgItemMessageA(hwnd, key, WM_SETTEXT, 0, 0);
+                        keyCleared = TRUE;
+                    }
+				}
+                else if (HIWORD(wParam) == EN_KILLFOCUS) {
+                    if (keyCleared) {
+						char str[] = "Enter key!";
+                        SendDlgItemMessageA(hwnd, key, WM_SETTEXT, sizeof(str), (LPARAM)str);
+                        keyCleared = FALSE;
+                    }
+                }
+            }
+            break;
         }
 		return 0;
     }
@@ -72,9 +90,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		HDC hMemDC = CreateCompatibleDC(hdc);
         SelectObject(hMemDC, background_bm);
 		BitBlt(hdc, 0, 0, 900, 900, hMemDC, 0, 0, SRCCOPY);
-        TextOutA(hdc, 50, 80, "Text", strlen("Text"));
-        TextOutA(hdc, 50, 280, "Encrypted text", strlen("Encrypted text"));
-        TextOutA(hdc, 50, 480, "Decrypted text", strlen("Decrypted text"));
+        char Text[] = "Text";
+		char EncryptedText[] = "Encrypted text";
+		char DecryptedText[] = "Decrypted text";
+        TextOutA(hdc, 50, 80, Text, sizeof(Text));
+        TextOutA(hdc, 50, 280, EncryptedText, sizeof(EncryptedText));
+        TextOutA(hdc, 50, 480, DecryptedText, sizeof(DecryptedText));
         DeleteDC(hMemDC); // Clean up the memory device context
         EndPaint(hwnd, &ps);
         return 0;

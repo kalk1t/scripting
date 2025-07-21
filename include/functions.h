@@ -20,6 +20,13 @@ void text_window(HWND hwnd) {
 	hClear = CreateWindowA("button", "Clear", WS_VISIBLE | WS_CHILD,
 		x, y, w, h, hwnd, (HMENU)clear, 0, 0);
 
+	x = 600;
+	y = 25;
+	w = 150;
+	h = 50;
+	hKey = CreateWindowA("edit", "Enter key!", WS_VISIBLE | WS_CHILD | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
+		x, y, w, h, hwnd, (HMENU)key, 0, 0);
+	keyCleared = FALSE;
 
 }
 
@@ -35,7 +42,7 @@ void encrypted_text_window(HWND hwnd) {
 	y = 425;
 	w = 50;
 	h = 30;
-	hCopy = CreateWindowA("button", "copy", WS_VISIBLE | WS_CHILD,
+	hCopy = CreateWindowA("button", "Copy", WS_VISIBLE | WS_CHILD,
 		x, y, w, h, hwnd, (HMENU)copy, 0, 0);
 
 }
