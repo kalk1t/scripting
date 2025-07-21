@@ -1,5 +1,5 @@
 #include <windows.h>
-
+#include <stdio.h>
 
 #include "include/define.h"
 #include "include/functions.h"
@@ -25,13 +25,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         switch ((short)(wParam)) {
         case generate:
         {
-            int length = GetWindowTextLength(hText);
-            char* buffer = (char*)malloc(length + 1);
-            SendDlgItemMessageA(hwnd, plain_text, WM_GETTEXT, length + 1, (LPARAM)buffer);
-            SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, (LPARAM)buffer);
-            SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, (LPARAM)buffer);
+            int text_length = GetWindowTextLength(hText);
+            int key_length = GetWindowTextLength(hKey);
+            int key_int = 0;
+            char* text_buffer = (char*)malloc(text_length + 1);
+            char* key_buffer = (char*)malloc(key_length + 1);
+            SendDlgItemMessageA(hwnd, plain_text, WM_GETTEXT, text_length + 1, (LPARAM)text_buffer);
+            SendDlgItemMessageA(hwnd, key, WM_GETTEXT, key_length + 1, (LPARAM)key_buffer);
+            key_int = get_key(key_buffer);
+            char tmp[32];
+            sprintf_s(tmp,sizeof(tmp), "%d", key_int);
+            SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, (LPARAM)key_buffer);
+            SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, (LPARAM)tmp);
 
-            free(buffer);
+            free(text_buffer);
+            free(key_buffer);
         }
         break;
         case clear:

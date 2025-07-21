@@ -57,7 +57,15 @@ void decrypted_text_window(HWND hwnd) {
 
 }
 
+int get_key(char* key_buffer) {
+	int result = 0;
+	int key_len = strlen(key_buffer);
+	for (int i = 0; i < key_len; i++) {
+		result += key_buffer[i];
+	}
 
+	return result;
+}
 void loadBitmaps() {
 	background_bm=(HBITMAP)LoadImageA(0, "assets/background.bmp", IMAGE_BITMAP, 900, 900, LR_LOADFROMFILE);
 
