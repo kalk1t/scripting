@@ -49,7 +49,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                     if (buffer) {
 						char* text = (char*)GlobalLock(buffer);
 						SendDlgItemMessageA(hwnd, encrypted_text, WM_GETTEXT, length + 1, (LPARAM)text);
-						text[length] = '\0'; // Null-terminate the string
                         GlobalUnlock(buffer);
 						// Open clipboard and copy text
 						if (OpenClipboard(hwnd)) {
@@ -73,7 +72,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 		HDC hMemDC = CreateCompatibleDC(hdc);
         SelectObject(hMemDC, background_bm);
 		BitBlt(hdc, 0, 0, 900, 900, hMemDC, 0, 0, SRCCOPY);
-
+        TextOutA(hdc, 50, 80, "Text", strlen("Text"));
+        TextOutA(hdc, 50, 280, "Encrypted text", strlen("Encrypted text"));
+        TextOutA(hdc, 50, 480, "Decrypted text", strlen("Decrypted text"));
         DeleteDC(hMemDC); // Clean up the memory device context
         EndPaint(hwnd, &ps);
         return 0;
