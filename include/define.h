@@ -1,6 +1,7 @@
-#define generate 1
-#define clear 2
-#define copy 3
+#define main 1
+#define generate 2
+#define clear 3
+#define copy 4
 
 
 #define plain_text 11
@@ -10,7 +11,6 @@
 
 #define MAX_TEXT_SIZE 4096
 
-BOOL keyCleared = TRUE;
 int x, y, w, h;
 
 HWND hText,hEncryptedText,hDecryptedText,hGenerate,hClear,hCopy,hKey;

@@ -19,14 +19,13 @@ void text_window(HWND hwnd) {
 	h = 30;
 	hClear = CreateWindowA("button", "Clear", WS_VISIBLE | WS_CHILD,
 		x, y, w, h, hwnd, (HMENU)clear, 0, 0);
-
+	
 	x = 600;
-	y = 25;
+	y = 35;
 	w = 150;
 	h = 50;
-	hKey = CreateWindowA("edit", "Enter key!", WS_VISIBLE | WS_CHILD | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
+	hKey = CreateWindowA("edit", "", WS_VISIBLE | WS_CHILD | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
 		x, y, w, h, hwnd, (HMENU)key, 0, 0);
-	keyCleared = FALSE;
 
 }
 

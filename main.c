@@ -12,8 +12,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     {
         loadBitmaps();
         text_window(hwnd);
-		encrypted_text_window(hwnd);
-		decrypted_text_window(hwnd);
+        encrypted_text_window(hwnd);
+        decrypted_text_window(hwnd);
 
 
 
@@ -23,64 +23,50 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     case WM_COMMAND:
     {
         switch ((short)(wParam)) {
-            case generate:
-            {
-                int length = GetWindowTextLength(hText);
-                char* buffer = (char*)malloc(length + 1);
-                SendDlgItemMessageA(hwnd, plain_text, WM_GETTEXT, length, (LPARAM)buffer);
-                SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, (LPARAM)buffer);
-                SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, (LPARAM)buffer);
+        case generate:
+        {
+            int length = GetWindowTextLength(hText);
+            char* buffer = (char*)malloc(length + 1);
+            SendDlgItemMessageA(hwnd, plain_text, WM_GETTEXT, length + 1, (LPARAM)buffer);
+            SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, (LPARAM)buffer);
+            SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, (LPARAM)buffer);
 
-                free(buffer);
-            }
-            break;
-            case clear:
-            {
-                SendDlgItemMessageA(hwnd, plain_text, WM_SETTEXT, 0, 0);
-                SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, 0);
-                SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, 0);
-                SendDlgItemMessageA(hwnd, key, WM_SETTEXT, 0, 0);
-            }
-            break;
-            case copy:
-            {
-				int length = GetWindowTextLength(hEncryptedText);
-                if (length > 0) {
-                    char* buffer = (char*)GlobalAlloc(GMEM_MOVEABLE, length + 1);
-                    if (buffer) {
-						char* text = (char*)GlobalLock(buffer);
-						SendDlgItemMessageA(hwnd, encrypted_text, WM_GETTEXT, length + 1, (LPARAM)text);
-                        GlobalUnlock(buffer);
-						// Open clipboard and copy text
-						if (OpenClipboard(hwnd)) {
-							EmptyClipboard();
-							SetClipboardData(CF_TEXT, buffer);
-                            CloseClipboard();
-						}
-						
-                    }
-                }
-            }
-            break;
-            case key:
-            {
-                if (HIWORD(wParam) == EN_SETFOCUS) {
-                    if (!keyCleared) {
-                        SendDlgItemMessageA(hwnd, key, WM_SETTEXT, 0, 0);
-                        keyCleared = TRUE;
-                    }
-				}
-                else if (HIWORD(wParam) == EN_KILLFOCUS) {
-                    if (keyCleared) {
-						char str[] = "Enter key!";
-                        SendDlgItemMessageA(hwnd, key, WM_SETTEXT, sizeof(str), (LPARAM)str);
-                        keyCleared = FALSE;
-                    }
-                }
-            }
-            break;
+            free(buffer);
         }
-		return 0;
+        break;
+        case clear:
+        {
+            SendDlgItemMessageA(hwnd, plain_text, WM_SETTEXT, 0, 0);
+            SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, 0);
+            SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, 0);
+            SendDlgItemMessageA(hwnd, key, WM_SETTEXT, 0, 0);
+        }
+        break;
+        case copy:
+        {
+            int length = GetWindowTextLength(hEncryptedText);
+            if (length > 0) {
+                char* buffer = (char*)GlobalAlloc(GMEM_MOVEABLE, length + 1);
+                if (buffer) {
+                    char* text = (char*)GlobalLock(buffer);
+                    SendDlgItemMessageA(hwnd, encrypted_text, WM_GETTEXT, length + 1, (LPARAM)text);
+                    GlobalUnlock(buffer);
+                    // Open clipboard and copy text
+                    if (OpenClipboard(hwnd)) {
+                        EmptyClipboard();
+                        SetClipboardData(CF_TEXT, buffer);
+                        CloseClipboard();
+                    }
+
+                }
+            }
+        }
+        break;
+       
+
+
+        }
+        return 0;
     }
     case WM_PAINT:
     {
@@ -91,11 +77,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         SelectObject(hMemDC, background_bm);
 		BitBlt(hdc, 0, 0, 900, 900, hMemDC, 0, 0, SRCCOPY);
         char Text[] = "Text";
+        char Key[] = "Key";
 		char EncryptedText[] = "Encrypted text";
 		char DecryptedText[] = "Decrypted text";
         TextOutA(hdc, 50, 80, Text, sizeof(Text));
         TextOutA(hdc, 50, 280, EncryptedText, sizeof(EncryptedText));
         TextOutA(hdc, 50, 480, DecryptedText, sizeof(DecryptedText));
+        TextOutA(hdc, 600, 15, Key, sizeof(Key));
         DeleteDC(hMemDC); // Clean up the memory device context
         EndPaint(hwnd, &ps);
         return 0;
@@ -128,6 +116,7 @@ int WINAPI WinMain(
     wc.lpszClassName = CLASS_NAME;
     wc.hbrBackground = NULL; // We fully handle background ourselves
     wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW); //Set a default cursor
 
     RegisterClass(&wc);
 
