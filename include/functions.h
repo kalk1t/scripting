@@ -65,11 +65,18 @@ int* convert_text_to_asci(char* text_buffer,int text_length,int key_integer) {
 	return result;
 }
 
+int encrypt_algorithm_n1(int asci, int key_integer) {
+	return (asci + key_integer) % BASE; // Simple algorithm: add key to ASCII value and wrap around at BASE	
+}
+int decrypt_algorithm_n1(int asci, int key_integer) {
+	return (asci - key_integer) % BASE;
+}
+
 
 int* cipher_text_to_int_with_key(int* asci_array_of_text_buffer, int text_length, int key_integer) {
 	int* result = (int*)malloc(text_length * sizeof(int) +1);
 	for (int i = 0; i < text_length; i++) {
-		result[i] = (asci_array_of_text_buffer[i] + key_integer) % BASE;
+		result[i] = encrypt_algorithm_n1(asci_array_of_text_buffer[i], key_integer);
 	}
 
 	return result;
@@ -87,7 +94,7 @@ int* cipher_text_to_int_with_key(int* asci_array_of_text_buffer, int text_length
  unsigned char* decrypt_from_asci_to_char_with_key(int* encrypted_text_buffer_to_int, int text_length, int key_integer) {
 	 unsigned char* result = (unsigned char*)malloc(text_length + 1);
 	 for (int i = 0; i < text_length; i++) {
-		 result[i] = (unsigned char)(encrypted_text_buffer_to_int[i]-key_integer);
+		 result[i] = (unsigned char)decrypt_algorithm_n1(encrypted_text_buffer_to_int[i],key_integer);
 	 }
 	 result[text_length] = '\0'; // Null-terminate the string
 	 return result;
