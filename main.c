@@ -27,19 +27,30 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
         {
             int text_length = GetWindowTextLength(hText);
             int key_length = GetWindowTextLength(hKey);
-            int key_int = 0;
+            int key_integer = 1;
             char* text_buffer = (char*)malloc(text_length + 1);
             char* key_buffer = (char*)malloc(key_length + 1);
+
+
             SendDlgItemMessageA(hwnd, plain_text, WM_GETTEXT, text_length + 1, (LPARAM)text_buffer);
             SendDlgItemMessageA(hwnd, key, WM_GETTEXT, key_length + 1, (LPARAM)key_buffer);
-            key_int = get_key(key_buffer);
-            char tmp[32];
-            sprintf_s(tmp,sizeof(tmp), "%d", key_int);
-            SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, (LPARAM)key_buffer);
-            SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, (LPARAM)tmp);
+            if (key_buffer != NULL) {
+               key_integer = atoi(key_buffer);
+            }
+
+            int* asci_array_of_text_buffer = convert_text_to_asci(text_buffer, text_length,key_integer);
+            int* encrypted_text_buffer_to_int = cipher_text_to_int_with_key(asci_array_of_text_buffer, text_length, key_integer);
+            unsigned char* encrypt_text_buffer_to_char = encrypt_from_asci_to_char_with_key(encrypted_text_buffer_to_int, text_length, key_integer);
+            SendDlgItemMessageA(hwnd, encrypted_text, WM_SETTEXT, 0, (LPARAM)(char*)encrypt_text_buffer_to_char);
+            unsigned char* decrypted_text_buffer_to_char = decrypt_from_asci_to_char_with_key(encrypted_text_buffer_to_int, text_length, key_integer);
+            SendDlgItemMessageA(hwnd, decrypted_text, WM_SETTEXT, 0, (LPARAM)decrypted_text_buffer_to_char);
 
             free(text_buffer);
             free(key_buffer);
+            free(asci_array_of_text_buffer);
+            free(encrypted_text_buffer_to_int);
+            free(encrypt_text_buffer_to_char);
+            free(decrypted_text_buffer_to_char);
         }
         break;
         case clear:

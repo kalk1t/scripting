@@ -24,7 +24,7 @@ void text_window(HWND hwnd) {
 	y = 35;
 	w = 150;
 	h = 50;
-	hKey = CreateWindowA("edit", "", WS_VISIBLE | WS_CHILD | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
+	hKey = CreateWindowA("edit", "21", WS_VISIBLE | WS_CHILD | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
 		x, y, w, h, hwnd, (HMENU)key, 0, 0);
 
 }
@@ -57,15 +57,41 @@ void decrypted_text_window(HWND hwnd) {
 
 }
 
-int get_key(char* key_buffer) {
-	int result = 0;
-	int key_len = strlen(key_buffer);
-	for (int i = 0; i < key_len; i++) {
-		result += key_buffer[i];
+int* convert_text_to_asci(char* text_buffer,int text_length,int key_integer) {
+	int* result = (int*)malloc(sizeof(int) * text_length);
+	for (int i = 0; i < text_length; i++) {
+		result[i] = (unsigned char)text_buffer[i];
+	}
+	return result;
+}
+
+
+int* cipher_text_to_int_with_key(int* asci_array_of_text_buffer, int text_length, int key_integer) {
+	int* result = (int*)malloc(text_length * sizeof(int) + 1);
+	for (int i = 0; i < text_length; i++) {
+		result[i] = (asci_array_of_text_buffer[i] + key_integer) % BASE;
 	}
 
 	return result;
 }
+
+ unsigned char* encrypt_from_asci_to_char_with_key(int* asci_array_of_ciphered_text_with_key,int text_length,int key_integer) {
+	 unsigned char* result = (unsigned char*)malloc(text_length + 1);
+	for (int i = 0; i < text_length; i++) {
+		result[i] = (unsigned char)(asci_array_of_ciphered_text_with_key[i]);
+	}
+	result[text_length] = '\0'; // Null-terminate the string
+	return result;
+}
+
+ unsigned char* decrypt_from_asci_to_char_with_key(int* encrypted_text_buffer_to_int, int text_length, int key_integer) {
+	 unsigned char* result = (unsigned char*)malloc(text_length + 1);
+	 for (int i = 0; i < text_length; i++) {
+		 result[i] = (unsigned char)(encrypted_text_buffer_to_int[i]-key_integer);
+	 }
+	 result[text_length] = '\0'; // Null-terminate the string
+	 return result;
+ }
 void loadBitmaps() {
 	background_bm=(HBITMAP)LoadImageA(0, "assets/background.bmp", IMAGE_BITMAP, 900, 900, LR_LOADFROMFILE);
 

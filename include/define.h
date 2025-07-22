@@ -10,7 +10,7 @@
 #define key 14
 
 #define MAX_TEXT_SIZE 4096
-
+#define BASE 256
 int x, y, w, h;
 
 HWND hText,hEncryptedText,hDecryptedText,hGenerate,hClear,hCopy,hKey;
