@@ -67,7 +67,7 @@ int* convert_text_to_asci(char* text_buffer,int text_length,int key_integer) {
 
 
 int* cipher_text_to_int_with_key(int* asci_array_of_text_buffer, int text_length, int key_integer) {
-	int* result = (int*)malloc(text_length * sizeof(int) + 1);
+	int* result = (int*)malloc(text_length * sizeof(int) +1);
 	for (int i = 0; i < text_length; i++) {
 		result[i] = (asci_array_of_text_buffer[i] + key_integer) % BASE;
 	}
@@ -75,7 +75,7 @@ int* cipher_text_to_int_with_key(int* asci_array_of_text_buffer, int text_length
 	return result;
 }
 
- unsigned char* encrypt_from_asci_to_char_with_key(int* asci_array_of_ciphered_text_with_key,int text_length,int key_integer) {
+ unsigned char* encrypt_from_asci_to_char_with_key(int* asci_array_of_ciphered_text_with_key,int text_length) {
 	 unsigned char* result = (unsigned char*)malloc(text_length + 1);
 	for (int i = 0; i < text_length; i++) {
 		result[i] = (unsigned char)(asci_array_of_ciphered_text_with_key[i]);

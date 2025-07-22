@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.c" />
+	  <ClCompile Include="src/main.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\define.h" />
