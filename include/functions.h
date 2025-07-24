@@ -6,12 +6,19 @@ void text_window(HWND hwnd) {
 	hText = CreateWindowA("edit", "", WS_VISIBLE | WS_CHILD | ES_MULTILINE | WS_VSCROLL | WS_HSCROLL | ES_AUTOVSCROLL | ES_AUTOHSCROLL,
 			x, y, w, h, hwnd, (HMENU)plain_text, 0, 0);
 
-	x = 650;
-	y = 140;
+	x = 195;
+	y = 225;
 	w = 65;
 	h = 30;
-	hGenerate = CreateWindowA("button", "Generate", WS_VISIBLE | WS_CHILD,
-		x, y, w, h, hwnd, (HMENU)generate, 0, 0);
+	hEncrypt = CreateWindowA("button", "Encrypt", WS_VISIBLE | WS_CHILD,
+		x, y, w, h, hwnd, (HMENU)encrypt, 0, 0);
+
+	x = 295;
+	y = 225;
+	w = 65;
+	h = 30;
+	hDecrypt = CreateWindowA("button", "Decrypt", WS_VISIBLE | WS_CHILD,
+		x, y, w, h, hwnd, (HMENU)decrypt, 0, 0);
 
 	x = 250;
 	y = 25;
@@ -69,7 +76,13 @@ int encrypt_algorithm_n1(int asci, int key_integer) {
 	return (asci + key_integer) % BASE; // Simple algorithm: add key to ASCII value and wrap around at BASE	
 }
 int decrypt_algorithm_n1(int asci, int key_integer) {
-	return (asci - key_integer) % BASE;
+
+
+	if (asci < key_integer) {
+		asci += BASE; // Ensure we don't get negative values
+	}
+	return (asci - key_integer) % BASE; //bcos decryption turns value to minus key_integer
+	
 }
 
 
